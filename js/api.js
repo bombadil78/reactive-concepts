@@ -35,7 +35,23 @@ function MyObservable(dataSource) {
     this.subscribe = (observer) => {
         this.observer = observer;
         this.dataSource.start();
+        return {
+            unsubscribe: () => this.dataSource.stop()
+        };
     };
+}
+
+function MySubject(observable) {
+
+    this.subscribe = (observer) => {
+
+    };
+
+    this.next = (value) => {
+        for (let i = 0; i < this.observers.length; i++) {
+            this.observers[i].next(value);
+        }
+    }
 }
 
 function chain(observable, nextFunc) {
@@ -63,16 +79,5 @@ function filter(observable, filterFunc) {
     });
 }
 
-const data = [];
-for (let i = 0; i < 100000; i++) {
-    data[i] = i;
-}
-
-new MyObservable(new MyDataSource(data))
-    .map(x => x * x)
-    .filter(x => x.toString().endsWith("6"))
-    .subscribe({
-        next: (data) => console.log(data),
-        error: (err) => console.log(err),
-        complete: () => {}
-    });
+module.exports.MyObservable = MyObservable;
+module.exports.MyDataSource = MyDataSource;
