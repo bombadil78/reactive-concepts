@@ -18,31 +18,34 @@
       * next
       * error 
       * complete
+* Producer
+  * The data source
+  * Emits data by calling the Observer's next(), error() or complete() methods      
+* Cold Observable
+  * The Producer is closed over the Observable
+  * Creating a new Observable results in the creation of a new Producer
+  * Unicast between Producer and Observable ...
+  * ... and uni- or multicast between Observable and Observers
+* Hot Observable
+  * The Producer lives outside of the Observable
+  * Multicast between Producer and Observable ...
+  * ... and uni- or multicast between Observable and Observers
 * Subject
   * A subject is both an Observable and an Observer
-  * A subject is a subtype of an Observable that holds a list of its Observers
-  * Does know about its Observers
-  * Can be used to multi-cast 
-
-* Hot vs. Cold Observable
-* Subject
-
-## RxJS API
-
-## 
-
-## Creation
-```javascript
-Observable.create(function subscribe(observer) {
-    // call observer here...
-    // ...
-
-    // return unsubscribe()
-    return () => {
-        // ...
-    };
-});
-```
-An observable is created using create() which takes a subscribe function as argument. This function will be called once a clients subscribes to the observable, **individually for every client**.
-
-An observable does not maintain a list of observers, it is just a call to *subscribe()*.
+  * A subject can be used to model multicasts from Producer to Observable
+    * Create a new subject that subscribes to the cold observable, hence listing to the Producer
+    * Create a new hot observable that subscribes its observer to the subject on subscription
+    * Keep track of the number of subscriptions to the hot observable and unsubscribe the subject from the cold observable if the hot observable has no more subscriptions
+    * Higher-level abstractions like RxJS.Subject offer automatic subscribe/unsubscribe to the cold observable
+  * Examples of subjects:
+    * BehaviorSubject: Send the latest (= current) value to the observer at subscription time
+    * ReplaySubject: Sends up to n latest messages to the observer at subscription time
+    * AsyncSubject: Only sends last value (= current) when observable completes, other messages are never sent
+* Operators: Allows operations on observable using functional programming style. The operators can be categorized:
+  * Create: create(), from(), of(), interval(), ... 
+  * Transform: map(), buffer(), scan(), ...
+  * Filter: filter(), distinct(), skip(), take(), ...
+  * Combine: forkJoin(), race(), zip(), ...
+  * Multicast
+  * Error 
+  * Utility
