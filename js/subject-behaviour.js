@@ -1,7 +1,7 @@
 const BehaviorSubject = require('rxjs/Rx').BehaviorSubject;
 const Observable = require('rxjs/Rx').Observable;
 
-// Notion of a current value, which is sent on a new subscription
+// Notion of a current value exists and is sent to observer on subscription
 
 const obs = Observable.create((observer) => {
     let counter = 1;
